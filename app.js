@@ -9,7 +9,78 @@ const Node = (data = null) =>{
 
 const Tree = (arr) =>{
     let newArr = removeDuplicates(MargeSort(arr))
-    return ROOT = buildTree(newArr)
+    let ROOT = buildTree(newArr)
+
+    const insert = (value, node) =>{
+        if(!node){
+            return node = Node(value)
+        }else{
+            if(value < node.data){
+                node.left = insert(value, node.left)
+            }else{
+                node.right = insert(value, node.right)
+            }
+        }
+        return node
+    }
+
+    const find = (value, node) =>{
+        if(!node) return null
+        else if(value === node.data) return node
+        else{
+            if(value < node.data){
+                return find(value, node.left)
+            }
+            else if(value > node.data){
+                return find(value, node.right)
+            }
+            else return
+        }
+    }
+
+    const Delete = (value, node) =>{
+        if(!node) return node;
+        if(value < node.data){
+            node.left = Delete(value, node.left)
+        }
+        else if(value > node.data){
+            node.right = Delete(value, node.right)
+        }
+        else{
+            if(!node.left) return node.right
+            else if(!node.right) return node.left
+
+            else{
+                let newNode = node
+
+                const nearestNumber = (nod) =>{
+                    while(nod.left){
+                        nod = nod.left
+                    }
+                    return nod
+                }
+                let newRoot = nearestNumber(newNode.right)
+                node.data = newRoot.data
+                Delete(newRoot.data, newNode.right)
+            }
+            
+        }
+        return node
+    }
+
+
+    return{
+        insert: (value) => {
+            ROOT = insert(value, ROOT)
+        },
+        find: (value) =>{
+            return find(value, ROOT)
+        },
+        Delete: (value) =>{
+            ROOT = Delete(value, ROOT)
+        },
+        ROOT,
+    }
 }
 
 const buildTree = (arr) =>{
@@ -84,4 +155,12 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   };
 
 const tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-prettyPrint(tree)
+console.log(tree)
+tree.insert(88)
+tree.insert(89)
+tree.insert(2)
+let fi = tree.find(8)
+console.log(fi)
+tree.Delete(67)
+tree.Delete(4)
+prettyPrint(tree.ROOT)
