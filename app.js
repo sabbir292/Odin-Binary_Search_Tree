@@ -68,6 +68,69 @@ const Tree = (arr) =>{
         return node
     }
 
+    const levelOrder = (callback, node, Queue = [], values = []) =>{
+
+        if(!node) return node
+        else{
+         if(!Queue[0]) Queue.push(node)
+
+        //  recursive ....
+         let currentNode = Queue[0]
+         if(!currentNode) return
+         else{
+
+             if(currentNode.right) Queue.push(currentNode.right)
+             if(currentNode.left) Queue.push(currentNode.left)
+             values.push(currentNode.data)
+             Queue.shift()
+             currentNode = Queue[0]
+             levelOrder(null, currentNode, Queue, values)
+
+            }
+        }
+        return values
+
+        // iterative....
+        // let currentNode = Queue[0]
+
+        // while(currentNode){
+        //     callback(currentNode, Queue)
+        //     // if(!callback) 
+        //     values.push(currentNode.data)
+        //     currentNode = Queue[0]
+        // }
+        // recursion
+        
+        // if(!currentNode) return currentNode
+        // else{
+        //     currentNode = callback(Queue[0], Queue)
+        //     values.push(currentNode.data)
+        // }
+
+        // return values
+    }
+
+    const levelOrderCallback = (node, Queue) =>{
+        if(node.left){
+            Queue.push(node.left)
+        }
+        if(node.right){
+            Queue.push(node.right)
+        }
+        Queue.shift()
+        return Queue
+    }
+
+    const inOrder = (callback, node, values = [],) =>{
+        if(!node) return node
+        else{
+            inOrder(null, node.left, values)
+            values.push(node.data)
+            inOrder(null, node.right, values)
+        }
+        if(!callback) return values
+        else callback(node)
+    }
 
     return{
         insert: (value) => {
@@ -79,6 +142,13 @@ const Tree = (arr) =>{
         Delete: (value) =>{
             ROOT = Delete(value, ROOT)
         },
+        levelOrder: () => {
+            return levelOrder(levelOrderCallback, ROOT)
+        },
+        inOrder : () =>{
+            return inOrder(null, ROOT,)
+        },
+
         ROOT,
     }
 }
@@ -96,7 +166,6 @@ const buildTree = (arr) =>{
     node.right = buildTree(rightArr)
     return node
 }
-
 
 
 // sort and removeDuplicates from the array.
@@ -163,4 +232,7 @@ let fi = tree.find(8)
 console.log(fi)
 tree.Delete(67)
 tree.Delete(4)
+let levelOrder = tree.levelOrder()
+let inOrder = tree.inOrder()
+console.log(inOrder)
 prettyPrint(tree.ROOT)
