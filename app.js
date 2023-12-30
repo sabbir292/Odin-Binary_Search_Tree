@@ -8,8 +8,7 @@ const Node = (data = null) =>{
 
 
 const Tree = (arr) =>{
-    let newArr = removeDuplicates(MargeSort(arr))
-    let ROOT = buildTree(newArr)
+    let ROOT = buildTree(arr)
 
     const insert = (value, node) =>{
         if(!node){
@@ -126,11 +125,80 @@ const Tree = (arr) =>{
         else{
             inOrder(null, node.left, values)
             values.push(node.data)
+            if(callback) callback(node)
             inOrder(null, node.right, values)
+    }
+    if(!callback) return values
+}
+
+const preOrder = (callback, node, values = []) =>{
+    if(!node) return node
+    else{
+            values.push(node.data)
+            if(callback) callback(node)
+            preOrder(null, node.left, values)
+            preOrder(null, node.right, values)
         }
         if(!callback) return values
-        else callback(node)
+}
+
+const postOrder = (callback, node, values = []) =>{
+    if(!node) return node
+    else{
+        postOrder(null, node.left, values)
+        postOrder(null, node.right, values)
+        values.push(node.data)
+        if(callback) callback(node)
     }
+    if(!callback) return values
+}
+
+const height = (node) =>{
+    if(!node) return 0
+    else{
+        let leftCount = height(node.left)
+        let rightCount = height(node.right)
+
+        if(leftCount < rightCount) return 1 + rightCount
+        else return 1 + leftCount
+    }
+}
+
+const depth = (node, target, dist = -1) =>{
+   if(!node) return -1
+   else{
+    if(node.data === target) return dist + 1
+    else{
+        dist = depth(node.left, target)
+        if(dist >= 0) return dist + 1
+        dist = depth(node.right, target)
+        if(dist >= 0) return dist + 1
+    }
+    return dist
+}
+}
+
+const isBallanced = (node)=>{
+  
+        let leftNode = height(node.left)
+        let rightNode = height(node.right)
+
+        if((leftNode - rightNode) > 1 || (rightNode - leftNode) > 1) {
+            return false
+        }
+        else return true
+}
+
+const reBallance = (node, arr = [])=>{
+    if(!node) return
+    else{
+        reBallance(node.left, arr)
+        reBallance(node.right, arr)
+        arr.push(node.data)
+    }
+    return ROOT = buildTree(arr)
+}
+
 
     return{
         insert: (value) => {
@@ -148,12 +216,34 @@ const Tree = (arr) =>{
         inOrder : () =>{
             return inOrder(null, ROOT,)
         },
+        preOrder : () =>{
+            return preOrder(null, ROOT,)
+        },
+        postOrder : () =>{
+            return postOrder(null, ROOT,)
+        },
 
+        height: ()=>{
+            return height(ROOT)
+        },
+
+        depth: (target)=>{
+            return depth(ROOT, target)
+        },
+        isBallanced: () =>{
+            return isBallanced(ROOT)
+        },
+        reBallance: () =>{
+            return reBallance(ROOT)
+        },
         ROOT,
     }
 }
 
-const buildTree = (arr) =>{
+
+const buildTree = (Arr) =>{
+    let sortedArr = MargeSort(Arr) 
+    let arr = removeDuplicates(sortedArr)
     
     if(arr.length < 1) return null
     const mid = Math.floor(arr.length / 2)
@@ -223,10 +313,13 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
 
-const tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+const tree = Tree([9,15,12,4,6,3,2,77,35,49])
 console.log(tree)
 tree.insert(88)
 tree.insert(89)
+tree.insert(100)
+tree.insert(115)
+tree.insert(119)
 tree.insert(2)
 let fi = tree.find(8)
 console.log(fi)
@@ -234,5 +327,15 @@ tree.Delete(67)
 tree.Delete(4)
 let levelOrder = tree.levelOrder()
 let inOrder = tree.inOrder()
-console.log(inOrder)
-prettyPrint(tree.ROOT)
+let preOrder = tree.preOrder()
+let postOrder = tree.postOrder()
+let btree = tree.reBallance()
+console.log(tree.height())
+console.log(tree.depth(89))
+console.log(tree.isBallanced())
+console.log(preOrder, inOrder, postOrder)
+prettyPrint(btree)
+// console.log(btree)
+// prettyPrint(btree)
+
+// btree.isBallanced()
