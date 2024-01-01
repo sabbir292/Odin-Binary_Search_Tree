@@ -7,7 +7,8 @@ const Node = (data = null) =>{
 }
 
 
-const Tree = (arr) =>{
+const Tree = () =>{
+    let arr = getRandArr()
     let ROOT = buildTree(arr)
 
     const insert = (value, node) =>{
@@ -88,36 +89,6 @@ const Tree = (arr) =>{
             }
         }
         return values
-
-        // iterative....
-        // let currentNode = Queue[0]
-
-        // while(currentNode){
-        //     callback(currentNode, Queue)
-        //     // if(!callback) 
-        //     values.push(currentNode.data)
-        //     currentNode = Queue[0]
-        // }
-        // recursion
-        
-        // if(!currentNode) return currentNode
-        // else{
-        //     currentNode = callback(Queue[0], Queue)
-        //     values.push(currentNode.data)
-        // }
-
-        // return values
-    }
-
-    const levelOrderCallback = (node, Queue) =>{
-        if(node.left){
-            Queue.push(node.left)
-        }
-        if(node.right){
-            Queue.push(node.right)
-        }
-        Queue.shift()
-        return Queue
     }
 
     const inOrder = (callback, node, values = [],) =>{
@@ -184,9 +155,17 @@ const isBallanced = (node)=>{
         let rightNode = height(node.right)
 
         if((leftNode - rightNode) > 1 || (rightNode - leftNode) > 1) {
-            return false
+            return "Not Ballanced"
         }
-        else return true
+        else return "Ballanced"
+}
+
+const unBalanced = ()=>{
+    for (let i = 0; i < 5; i++){
+        let numGreateerThanHundred = (Math.floor(Math.random()*10) + 1)*100
+        insert(numGreateerThanHundred,ROOT)
+    }
+    return ROOT
 }
 
 const reBallance = (node, arr = [])=>{
@@ -200,46 +179,36 @@ const reBallance = (node, arr = [])=>{
 }
 
 
+
+const driverScript = ()=>{
+    const arr = getRandArr()
+    const Tree = buildTree(arr)
+    console.log(isBallanced(Tree))
+    console.log(levelOrder(null,Tree),preOrder(null,Tree), postOrder(null,Tree), inOrder(null, Tree))
+    const unBalancedTree = unBalanced(Tree)
+    console.log(isBallanced(unBalancedTree))
+    const ballancedTree = reBallance(unBalancedTree)
+    console.log(isBallanced(ballancedTree))
+    console.log(levelOrder(null,ballancedTree),preOrder(null,ballancedTree), postOrder(null,ballancedTree), inOrder(null, ballancedTree))
+    prettyPrint(Tree)
+    prettyPrint(unBalancedTree)
+    prettyPrint(ballancedTree)
+}
     return{
-        insert: (value) => {
-            ROOT = insert(value, ROOT)
-        },
-        find: (value) =>{
-            return find(value, ROOT)
-        },
-        Delete: (value) =>{
-            ROOT = Delete(value, ROOT)
-        },
-        levelOrder: () => {
-            return levelOrder(levelOrderCallback, ROOT)
-        },
-        inOrder : () =>{
-            return inOrder(null, ROOT,)
-        },
-        preOrder : () =>{
-            return preOrder(null, ROOT,)
-        },
-        postOrder : () =>{
-            return postOrder(null, ROOT,)
-        },
-
-        height: ()=>{
-            return height(ROOT)
-        },
-
-        depth: (target)=>{
-            return depth(ROOT, target)
-        },
-        isBallanced: () =>{
-            return isBallanced(ROOT)
-        },
-        reBallance: () =>{
-            return reBallance(ROOT)
-        },
-        ROOT,
+        driverScript: ()=>{
+            return driverScript()
+        }
     }
 }
 
+const getRandArr = ()=>{
+    let arr = []
+    for(let i = 0; i < 10; i++){
+        const randNum = Math.floor(Math.random()*99 + 1)
+        arr.push(randNum)
+    }
+    return arr
+}
 
 const buildTree = (Arr) =>{
     let sortedArr = MargeSort(Arr) 
@@ -299,7 +268,6 @@ const removeDuplicates = (arr) =>{
     return uniqueArr;
 }
 
-
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -313,29 +281,44 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
 
-const tree = Tree([9,15,12,4,6,3,2,77,35,49])
-console.log(tree)
-tree.insert(88)
-tree.insert(89)
-tree.insert(100)
-tree.insert(115)
-tree.insert(119)
-tree.insert(2)
-let fi = tree.find(8)
-console.log(fi)
-tree.Delete(67)
-tree.Delete(4)
-let levelOrder = tree.levelOrder()
-let inOrder = tree.inOrder()
-let preOrder = tree.preOrder()
-let postOrder = tree.postOrder()
-let btree = tree.reBallance()
-console.log(tree.height())
-console.log(tree.depth(89))
-console.log(tree.isBallanced())
-console.log(preOrder, inOrder, postOrder)
-prettyPrint(btree)
-// console.log(btree)
-// prettyPrint(btree)
+const tree = Tree()
+tree.driverScript()
 
-// btree.isBallanced()
+
+// **************************************************\\
+// Early approch:
+       // iterative....
+        // let currentNode = Queue[0]
+
+        // while(currentNode){
+        //     callback(currentNode, Queue)
+        //     // if(!callback) 
+        //     values.push(currentNode.data)
+        //     currentNode = Queue[0]
+        // }
+        // recursion
+        
+        // if(!currentNode) return currentNode
+        // else{
+        //     currentNode = callback(Queue[0], Queue)
+        //     values.push(currentNode.data)
+        // }
+
+        // return values
+
+
+
+        
+        //***levelorder Callback. this one has no functionality.***
+        
+    // const levelOrderCallback = (node, Queue) =>{
+    //     if(node.left){
+    //         Queue.push(node.left)
+    //     }
+    //     if(node.right){
+    //         Queue.push(node.right)
+    //     }
+    //     Queue.shift()
+    //     return Queue
+    // }
+// **************************************************\\
